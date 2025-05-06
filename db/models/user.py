@@ -8,9 +8,19 @@ class UserDTO(BaseModel):
     surname: str
     email: EmailStr
     hashed_password: str
-    created_at: datetime.datetime = datetime.datetime.now(datetime.timezone.utc)
-    updated_at: datetime.datetime = datetime.datetime.now(datetime.timezone.utc)
-    deleted_at: float | None = None
+    created_at: UTCDatetime = datetime.datetime.now(datetime.timezone.utc)
+    updated_at: UTCDatetime = datetime.datetime.now(datetime.timezone.utc)
+    deleted_at: UTCDatetime | None = None
+    is_active: bool = True
+    is_deleted: bool = False
+    mail_confirmed: bool = False
+
+class UserInsertDTO(BaseModel):
+    name: str
+    surname: str
+    email: EmailStr
+    hashed_password: str
+    created_at: UTCDatetime = datetime.datetime.now(datetime.timezone.utc)
     is_active: bool = True
     is_deleted: bool = False
     mail_confirmed: bool = False

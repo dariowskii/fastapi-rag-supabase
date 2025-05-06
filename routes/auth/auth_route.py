@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 
 from db.collections import tokens_table, users_table
 from db.models.base_response import BaseResponse
-from db.models.user import UserDTO, UserResponse
+from db.models.user import UserDTO, UserInsertDTO, UserResponse
 from routes.auth.models import UserJTWPayload, UserLoginRequest, UserRegisterRequest, UserTokenResponse, RefreshTokenModel
 
 from postgrest import AsyncRequestBuilder
@@ -43,7 +43,7 @@ async def register_user(
                 .execute()
         )
 
-        if user.data is None or len(user.data) <= 0:
+        if user.data is not None and len(user.data) > 0:
             # User already exists, we send a success response to avoid user enumeration
             return BaseResponse[bool].ok(True)
         
@@ -53,12 +53,12 @@ async def register_user(
         request_data['hashed_password'] = get_password_hash(request.password.get_secret_value())
         del request_data['password']
 
-        user_dto = UserDTO(**request_data)
+        user_dto = UserInsertDTO(**request_data)
 
         # result = await users_table.insert_one(user_dto.model_dump(exclude_none=True))
         result = await (
             users_table
-                .insert(user_dto.model_dump())
+                .insert(user_dto.model_dump(mode='json'))
                 .execute()
         )
 

@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routes.user.user_route import user_route
 from routes.auth.auth_route import auth_route
+from routes.rag.rag_route import rag_route
+
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse
 
@@ -39,6 +41,7 @@ ConfigDict.json_encoders = {
 
 app.include_router(user_route)
 app.include_router(auth_route)
+app.include_router(rag_route)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc: RequestValidationError):

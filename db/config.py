@@ -1,5 +1,7 @@
+from supabase import create_async_client
 from config import SUPABASE_KEY, SUPABASE_URL
-from supabase import AsyncClient, create_async_client
+
+supabaseConnection = create_async_client(SUPABASE_URL, SUPABASE_KEY)
 
 class DBConnectionError(Exception):
     pass
@@ -14,9 +16,7 @@ async def db_connection():
         AsyncClient: The Supabase client
     """
 
-    supabaseConnection: AsyncClient = await create_async_client(SUPABASE_URL, SUPABASE_KEY)
-
     try:
-        yield supabaseConnection
+        yield await supabaseConnection
     except Exception as e:
         raise DBConnectionError(f"DB connection error: {e}")
